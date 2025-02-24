@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Robovanza</title>
+  <style>
+    :root {
+      --primary: #007BFF;
+      --danger: #dc3545;
+      --success: #28a745;
+      --background: #f8f9fa;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: var(--background);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+    }
+    .nav-link {
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #f0f0f0;
+      text-decoration: none;
+      color: #333;
+    }
+    .nav-link.active {
+      background: var(--primary);
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: var(--primary);
+      color: white;
+    }
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    .alert {
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    .alert-success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .alert-error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    /* Live Scores styling remains in dashboard tab */
+    .live-scores {
+      background: #fff;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    /* Footer Styles */
+    #footer {
+      background: linear-gradient(90deg, hsla(327, 35%, 20%, 1) 0%, hsla(262, 28%, 21%, 1) 50%, hsla(209, 57%, 28%, 1) 100%);
+      padding-left: 5%;
+      padding-top: 2%;
+      border-top: solid 2px rgba(0, 0, 0, .2);
+    }
+    #footer .box-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+      gap: 2rem;
+    }
+    #footer .box-container .box {
+      padding-left: 2%;
+    }
+    #footer .box-container .box h3 {
+      font-size: 1.5rem;
+      text-transform: uppercase;
+      color: #e5dfdf;
+      padding: 1rem 0;
+      border-bottom: 3px solid #ef5777;
+      display: inline-block;
+      padding-bottom: 3px;
+      margin-bottom: 5px;
+    }
+    #footer .box-container .box a {
+      font-size: 1.1rem;
+      text-decoration: none;
+      display: block;
+      color: #afa3a3;
+      padding: 1rem 0;
+      margin-bottom: 5px;
+    }
+    #footer .box-container .box a i {
+      color: #ef5777;
+      padding-right: .3rem;
+      transition: .2s linear;
+    }
+    #footer .box-container .box a:hover i {
+      padding-right: 2rem;
+    }
+    #footer #credit {
+      padding-bottom: 20px;
+      align-items: center;
+    }
+    /* Register Section Styles */
+    #register {
+      background: linear-gradient(90deg, hsla(327, 35%, 20%, 1) 0%, hsla(262, 28%, 21%, 1) 50%, hsla(209, 57%, 28%, 1) 100%);
+      padding: 40px 10%;
+      text-align: center;
+    }
+    #register .heading {
+      font-size: 3rem;
+      color: #fff;
+      text-shadow: 0 5px 15px rgba(0, 0, 0, .5);
+      border-bottom: solid 5px #f9c046;
+      padding-bottom: 10px;
+      margin-bottom: 50px;
+      display: inline-block;
+    }
+    #register .box-container1 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      justify-items: center;
+    }
+    #register .box {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+    #register .box:hover {
+      transform: translateY(-10px);
+    }
+    #register .box img {
+      height: 200px;
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    #register .box:hover img {
+      transform: scale(1.1);
+    }
+    #register .box h3 {
+      font-size: 1.6rem;
+      color: #333;
+      margin: 15px 0;
+    }
+    #register .box p {
+      font-size: 1rem;
+      color: #777;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+    #register .box a {
+      display: inline-block;
+      margin: 5px 10px;
+      padding: 12px 30px;
+      border-radius: 50px;
+      background: linear-gradient(120deg, #ffdd55 0%, #f68084 100%);
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    #register .box a:hover {
+      background: linear-gradient(120deg, #f68084 0%, #ffdd55 100%);
+    }
+    #register .box-container1 .box h3,
+    #register .box-container1 .box p,
+    #register .box-container1 .box a {
+      transition: all 0.3s ease;
+    }
+    #register .box:hover h3,
+    #register .box:hover p,
+    #register .box:hover a {
+      color: #f68084;
+    }
+    @media (max-width: 768px) {
+      #register {
+        padding: 20px 5%;
+      }
+      #register .box img {
+        height: 150px;
+      }
+      #register .heading {
+        font-size: 2.5rem;
+      }
+    }
+    /* Live Matches Section Styles */
+    #live-matches {
+      padding: 20px;
+      text-align: center;
+      background: #000;
+      color: #fff;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+    .event-block {
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #1e1e1e;
+    }
+    .event-block h2 {
+      margin-bottom: 10px;
+    }
+    .matches {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+    .match {
+      background: var(--primary);
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      min-width: 200px;
+      color: #fff;
+      text-align: left;
+    }
+    .match.ended {
+      background: var(--danger);
+    }
+    /* Cursor */
+    #cursor {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #fff;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Robovanza Admin Dashboard</h1>
+      <div class="user-info">
+        Welcome, {{ current_user.name }} | 
+        <a href="{{ url_for('admin_logout') }}" class="btn btn-danger">Logout</a>
+      </div>
+    </div>
+    
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <a class="nav-link active" data-tab="dashboard">Dashboard</a>
+      <a class="nav-link" data-tab="teams">Manage Teams</a>
+      <a class="nav-link" data-tab="matches">Manage Matches</a>
+      <a class="nav-link" data-tab="events">Manage Events</a>
+    </nav>
+    
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab-content active">
+      <h2>Event Overview</h2>
+      <div class="live-scores">
+        <h3>Live Scores</h3>
+        <div id="live-scores-container">
+          <p>Loading live scores...</p>
+        </div>                
+      </div>
+    </div>
+    
+    <!-- Teams Tab -->
+    <div id="teams" class="tab-content">
+      <h2>Manage Teams</h2>
+      <h3>Add New Team</h3>
+      <form method="POST" action="{{ url_for('add_team') }}">
+        <input type="text" name="team_name" placeholder="Team Name" required>
+        <input type="text" name="team_members" placeholder="Team Members (comma separated)" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="phone" placeholder="Phone Number" required>
+        <select name="event_id" required>
+          {% for event in events %}
+            <option value="{{ event.id }}">{{ event.event_name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-success">Add Team</button>
+      </form>
+      
+      <h3>Team List</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Team Name</th>
+            <th>Members</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Event</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for team in teams %}
+          <tr>
+            <td>{{ team.id }}</td>
+            <td>{{ team.team_name }}</td>
+            <td>{{ team.team_members }}</td>
+            <td>{{ team.email }}</td>
+            <td>{{ team.phone }}</td>
+            <td>{{ team.event.event_name }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('delete_team', team_id=team.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Matches Tab -->
+    <div id="matches" class="tab-content">
+      <h2>Manage Matches</h2>
+      <h3>Add New Match</h3>
+      <form method="POST" action="{{ url_for('create_match') }}">
+        <select name="event_id" required>
+          {% for event in events %}
+            <option value="{{ event.id }}">{{ event.event_name }}</option>
+          {% endfor %}
+        </select>
+        <select name="team1_id" required>
+          {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.team_name }}</option>
+          {% endfor %}
+        </select>
+        <select name="team2_id" required>
+          {% for team in teams %}
+            <option value="{{ team.id }}">{{ team.team_name }}</option>
+          {% endfor %}
+        </select>
+        <input type="number" name="team1_score" placeholder="Team 1 Score" value="0" min="0">
+        <input type="number" name="team2_score" placeholder="Team 2 Score" value="0" min="0">
+        <select name="status" required>
+          <option value="ongoing" selected>Ongoing</option>
+          <option value="ended">Ended</option>
+        </select>
+        <button type="submit" class="btn btn-success">Add Match</button>
+      </form>
+      
+      <h3>Match List</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Match ID</th>
+            <th>Event</th>
+            <th>Team 1 (Score)</th>
+            <th>Team 2 (Score)</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for match in ongoing_matches %}
+          <tr>
+            <td>{{ match.id }}</td>
+            <td>{{ match.event.event_name }}</td>
+            <td>{{ match.team1.team_name }} ({{ match.team1_score }})</td>
+            <td>
+              {% if match.team2 %}
+                {{ match.team2.team_name }} ({{ match.team2_score }})
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+            <td>{{ match.status }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('update_match', match_id=match.id) }}">
+                <input type="number" name="team1_score" value="{{ match.team1_score }}" min="0" required>
+                <input type="number" name="team2_score" value="{{ match.team2_score }}" min="0" required>
+                <select name="status">
+                  <option value="ongoing" {% if match.status=='ongoing' %} selected {% endif %}>Ongoing</option>
+                  <option value="ended" {% if match.status=='ended' %} selected {% endif %}>Ended</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </form>
+              <form method="POST" action="{{ url_for('delete_match', match_id=match.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+          {% for match in ended_matches %}
+          <tr>
+            <td>{{ match.id }}</td>
+            <td>{{ match.event.event_name }}</td>
+            <td>{{ match.team1.team_name }} ({{ match.team1_score }})</td>
+            <td>
+              {% if match.team2 %}
+                {{ match.team2.team_name }} ({{ match.team2_score }})
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+            <td>{{ match.status }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('delete_match', match_id=match.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Events Tab -->
+    <div id="events" class="tab-content">
+      <h2>Manage Events</h2>
+      <h3>Add New Event</h3>
+      <form method="POST" action="{{ url_for('add_event') }}">
+        <input type="text" name="event_name" placeholder="Event Name" required>
+        <textarea name="description" placeholder="Description"></textarea>
+        <input type="date" name="event_date" required>
+        <input type="text" name="rule_book" placeholder="Rule Book URL or Path">
+        <button type="submit" class="btn btn-success">Add Event</button>
+      </form>
+      
+      <h3>Event List</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Event ID</th>
+            <th>Event Name</th>
+            <th>Description</th>
+            <th>Event Date</th>
+            <th>Rule Book</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <td>{{ event.id }}</td>
+            <td>{{ event.event_name }}</td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.event_date }}</td>
+            <td>{{ event.rule_book }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('delete_event', event_id=event.id) }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- JavaScript for Tabs -->
+  <script>
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", function() {
+        document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+        document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
+        // Use data-tab attribute to switch tabs
+        let tabId = this.getAttribute("data-tab");
+        document.getElementById(tabId).classList.add("active");
+        this.classList.add("active");
+      });
+    });
+  </script>
+  
+  <!-- Additional Scripts (Cursor, Locomotive, GSAP, etc.) -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" integrity="sha512-onMTRKJBKz8M1TnqqDuGBlowlH0ohFzMXYRNebz+yOcc5TQr/zAKsthzhuv0hiyUKEiQEQXEynnXCvNTOk50dg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // For cursor
+    function cursor() {
+      let cursor = document.querySelector("#cursor");
+      document.querySelector("body").addEventListener("mousemove", (e) => {
+        gsap.to(cursor, {
+          x: e.x + "px",
+          y: e.y + "px",
+        });
+      });
+    }
+    cursor();
+    
+    // For page1 movement
+    function section1() {
+      let t1 = gsap.timeline();
+      t1.from("nav", { y: -50, opacity: 0, duration: 1 });
+      t1.from("#page-bottom h1, #page-bottom p", { y: 100, opacity: 0, duration: 0.8 });
+    }
+    section1();
+    
+    gsap.to("#page>video", {
+      ScrollTrigger: {
+        trigger: "#page>video",
+        start: "3% top",
+        end: "bottom top",
+        markers: true,
+        scroller: "#main",
+      },
+      onStart: () => { document.querySelector("#page>video").play(); }
+    });
+    
+    window.onscroll = () => {
+      menu.classList.remove('fa-times');
+      menu.classList.remove('active');
+    };
+    
+    var swiper = new Swiper(".home-slider", {
+      loop: true,
+      spaceBetween: true,
+      grabCursor: true,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+    });
+    
+    // For website smooth scrolling
+    function loco() {
+      gsap.registerPlugin(ScrollTrigger);
+      const locoScroll = new LocomotiveScroll({
+        el: document.querySelector("#main"),
+        smooth: true,
+        tablet: { smooth: true },
+        smartphone: { smooth: true },
+      });
+      locoScroll.on("scroll", ScrollTrigger.update);
+      ScrollTrigger.scrollerProxy("#main", {
+        scrollTop(value) {
+          return arguments.length ? locoScroll.scrollTo(value, 0, 0) : locoScroll.scroll.instance.scroll.y;
+        },
+        getBoundingClientRect() {
+          return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+        },
+        pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
+      });
+      ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+      ScrollTrigger.refresh();
+    }
+    loco();
+    
+    gsap.to("#page>video", {
+      ScrollTrigger: {
+        trigger: "#page>video",
+        start: "7% top",
+        end: "bottom top",
+        markers: true,
+        scroller: "#main",
+      },
+      onStart: () => { document.querySelector("#page>video").play(); }
+    });
+  </script>
+  
+  <!-- Live Matches Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      function fetchLiveMatches() {
+        fetch('/api/live-scores')
+          .then(response => response.json())
+          .then(data => {
+            const container = document.getElementById('match-container');
+            container.innerHTML = ""; // Clear previous content
+
+            if (data.matches.length === 0) {
+              const noMatches = document.getElementById('no-matches');
+              if (noMatches) noMatches.style.display = "block";
+              const liveSection = document.getElementById('live-matches');
+              if (liveSection) liveSection.style.display = "none";
+              return;
+            } else {
+              const noMatches = document.getElementById('no-matches');
+              if (noMatches) noMatches.style.display = "none";
+              const liveSection = document.getElementById('live-matches');
+              if (liveSection) liveSection.style.display = "block";
+            }
+
+            // Group matches by status
+            let ongoingMatches = data.matches.filter(match => match.status === "ongoing");
+            let endedMatches = data.matches.filter(match => match.status !== "ongoing");
+
+            // Create cards for ongoing matches
+            if (ongoingMatches.length > 0) {
+              let ongoingContainer = document.createElement("div");
+              ongoingContainer.innerHTML = "<h2>Ongoing Matches</h2>";
+              let ongoingCards = document.createElement("div");
+              ongoingCards.classList.add("matches");
+              ongoingMatches.forEach(match => {
+                let card = document.createElement("div");
+                card.classList.add("match");
+                card.innerHTML = `
+                  <h3>${match.event_name}</h3>
+                  <p><strong>${match.team1_name}</strong> : ${match.team1_score}</p>
+                  <p><strong>${match.team2_name}</strong> : ${match.team2_score}</p>
+                `;
+                ongoingCards.appendChild(card);
+              });
+              ongoingContainer.appendChild(ongoingCards);
+              container.appendChild(ongoingContainer);
+            }
+
+            // Create cards for ended matches
+            if (endedMatches.length > 0) {
+              let endedContainer = document.createElement("div");
+              endedContainer.innerHTML = "<h2>Ended Matches</h2>";
+              let endedCards = document.createElement("div");
+              endedCards.classList.add("matches");
+              endedMatches.forEach(match => {
+                let card = document.createElement("div");
+                card.classList.add("match", "ended");
+                card.innerHTML = `
+                  <h3>${match.event_name}</h3>
+                  <p><strong>${match.team1_name}</strong> : ${match.team1_score}</p>
+                  <p><strong>${match.team2_name}</strong> : ${match.team2_score}</p>
+                `;
+                endedCards.appendChild(card);
+              });
+              endedContainer.appendChild(endedCards);
+              container.appendChild(endedContainer);
+            }
+          })
+          .catch(error => {
+            console.error("Error fetching live matches:", error);
+            const container = document.getElementById('match-container');
+            if (container) container.innerHTML = "<p>Error loading live matches.</p>";
+          });
+      }
+      setInterval(fetchLiveMatches, 5000);
+      fetchLiveMatches();
+    });
+  </script>
+</body>
+</html>
