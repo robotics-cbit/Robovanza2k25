@@ -4,3 +4,4 @@ Flask-Login
 Werkzeug
 gunicorn
 dotenv
+pymysql
