@@ -4,5 +4,6 @@ Flask-Login
 Werkzeug
 gunicorn
 dotenv
-pymysql
+pymysql==1.1.0
 cryptography
+python-dotenv
