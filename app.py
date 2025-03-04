@@ -12,8 +12,8 @@ load_dotenv()
 app = Flask(__name__, template_folder='templates')
 
 # Configuration using environment variables
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL').replace('mysql://', 'mysql+pymysql://')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL').replace('mysql://', 'mysql+pymysql://')
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'pool_recycle': 3600,   # Recycle connections every hour
     'pool_pre_ping': True   # Check connection health before using
